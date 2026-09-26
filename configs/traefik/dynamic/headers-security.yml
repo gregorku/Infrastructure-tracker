@@ -1,0 +1,79 @@
+###############################################################################
+#
+# Monitoring-Grafana Project
+#
+# File:
+#   configs/traefik/dynamic/headers-security.yml
+#
+# Description:
+#   Security HTTP headers middleware.
+#
+###############################################################################
+
+http:
+
+  middlewares:
+
+    headers-security:
+
+      headers:
+
+        #
+        # Prevent clickjacking.
+        #
+        frameDeny: true
+
+        #
+        # Prevent MIME type sniffing.
+        #
+        contentTypeNosniff: true
+
+        #
+        # Enable basic XSS protection for older browsers.
+        #
+        browserXssFilter: true
+
+        #
+        # Force HTTPS for one year.
+        #
+        stsSeconds: 31536000
+
+        #
+        # Apply HSTS to subdomains.
+        #
+        stsIncludeSubdomains: true
+
+        #
+        # Allow browsers to preload HSTS.
+        #
+        stsPreload: true
+
+        #
+        # Inform Traefik that SSL termination is enabled.
+        #
+        sslProxyHeaders:
+
+          X-Forwarded-Proto: https
+
+        #
+        # Additional security headers.
+        #
+        customResponseHeaders:
+
+          Referrer-Policy: "strict-origin-when-cross-origin"
+
+          Permissions-Policy: >
+            accelerometer=(),
+            camera=(),
+            geolocation=(),
+            gyroscope=(),
+            magnetometer=(),
+            microphone=(),
+            payment=(),
+            usb=()
+
+          X-Permitted-Cross-Domain-Policies: "none"
+
+          Cross-Origin-Opener-Policy: "same-origin"
+
+          Cross-Origin-Resource-Policy: "same-origin"

@@ -1,0 +1,23 @@
+###############################################################################
+#
+# Monitoring-Grafana Project
+#
+# File:
+#   configs/traefik/dynamic/auth-basic.yml
+#
+# Description:
+#   Basic Authentication middleware.
+#
+###############################################################################
+
+http:
+
+  middlewares:
+
+    auth-basic:
+
+      basicAuth:
+
+        realm: "Monitoring-Grafana"
+
+        usersFile: "/etc/traefik/users/dashboard.htpasswd"

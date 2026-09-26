@@ -1,0 +1,21 @@
+###############################################################################
+#
+# Monitoring-Grafana Project
+#
+# File:
+#   compose/00-networks.yml
+#
+# Description:
+#   External Docker networks.
+#
+###############################################################################
+
+networks:
+
+  bridge-moje:
+    external: true
+    name: bridge-moje
+
+  traefik-moje:
+    external: true
+    name: traefik-moje

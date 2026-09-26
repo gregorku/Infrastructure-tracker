@@ -1,0 +1,99 @@
+###############################################################################
+#
+# GPS Tracker server
+#
+# Public service for mapa.serveftp.org.
+#
+###############################################################################
+
+services:
+
+  gps-tracker:
+
+    build:
+
+      context: ../gps-tracker
+
+    image: local/gps-tracker:latest
+
+    container_name: gps-tracker
+
+    hostname: gps-tracker
+
+    restart: unless-stopped
+
+    init: true
+
+    security_opt:
+
+      - no-new-privileges:true
+
+    environment:
+
+      TZ: ${TZ}
+
+      GPS_API_TOKEN: ${GPS_API_TOKEN}
+
+      GPS_ADMIN_USER: ${GPS_ADMIN_USER}
+
+      GPS_ADMIN_PASSWORD: ${GPS_ADMIN_PASSWORD}
+
+      GPS_DATA_DIR: /data
+
+    volumes:
+
+      - ${GPS_DATA_DIR}:/data
+
+    networks:
+
+      bridge-moje:
+
+        ipv4_address: ${IP_GPS_TRACKER}
+
+      traefik-moje:
+
+    labels:
+
+      - traefik.enable=true
+
+      - traefik.docker.network=traefik-moje
+
+      - traefik.http.routers.gps-tracker.rule=Host(`${GPS_DOMAIN}`)
+
+      - traefik.http.routers.gps-tracker.entrypoints=websecure
+
+      - traefik.http.routers.gps-tracker.tls=true
+
+      - traefik.http.routers.gps-tracker.tls.certresolver=letsencrypt
+
+      - traefik.http.routers.gps-tracker.middlewares=public-chain@file
+
+      - traefik.http.services.gps-tracker.loadbalancer.server.port=8000
+
+    healthcheck:
+
+      test:
+
+        - CMD
+
+        - python
+
+        - -c
+
+        - "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=3)"
+
+      interval: 30s
+
+      timeout: 5s
+
+      retries: 3
+
+    logging:
+
+      driver: json-file
+
+      options:
+
+        max-size: ${LOG_MAX_SIZE}
+
+        max-file: "${LOG_MAX_FILES}"

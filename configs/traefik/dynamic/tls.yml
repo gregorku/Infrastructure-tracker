@@ -1,0 +1,59 @@
+###############################################################################
+#
+# Monitoring-Grafana Project
+#
+# File:
+#   configs/traefik/dynamic/tls.yml
+#
+# Description:
+#   Global TLS configuration.
+#
+###############################################################################
+
+tls:
+
+  ###########################################################################
+  # Default TLS Store
+  ###########################################################################
+
+  stores:
+
+    default: {}
+
+  ###########################################################################
+  # TLS Options
+  ###########################################################################
+
+  options:
+
+    default:
+
+      #
+      # Modern TLS
+      #
+
+      minVersion: VersionTLS12
+
+      #
+      # Prefer strong curves
+      #
+
+      curvePreferences:
+
+        - CurveP521
+        - CurveP384
+
+      #
+      # HTTP/2
+      #
+
+      alpnProtocols:
+
+        - h2
+        - http/1.1
+
+      #
+      # SNI
+      #
+
+      sniStrict: false

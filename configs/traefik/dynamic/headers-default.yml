@@ -1,0 +1,32 @@
+###############################################################################
+#
+# Monitoring-Grafana Project
+#
+# File:
+#   configs/traefik/dynamic/headers-default.yml
+#
+###############################################################################
+
+http:
+
+  middlewares:
+
+    headers-default:
+
+      headers:
+
+        contentTypeNosniff: true
+
+        browserXssFilter: true
+
+        frameDeny: true
+
+        referrerPolicy: "strict-origin-when-cross-origin"
+
+        permissionsPolicy: "interest-cohort=()"
+
+        customResponseHeaders:
+
+          X-Robots-Tag: "noindex,nofollow"
+
+          Server: ""

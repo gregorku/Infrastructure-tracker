@@ -1,0 +1,76 @@
+###############################################################################
+#
+# Monitoring-Grafana Project
+#
+# File:
+#   compose/20-crowdsec.yml
+#
+# Description:
+#   CrowdSec Security Engine
+#
+###############################################################################
+
+services:
+
+  crowdsec:
+
+    image: crowdsecurity/crowdsec:${CROWDSEC_VERSION}
+
+    container_name: crowdsec
+
+    restart: unless-stopped
+
+    init: true
+
+    networks:
+
+      bridge-moje:
+        ipv4_address: ${IP_CROWDSEC}
+
+    environment:
+
+      TZ: ${TZ}
+
+    volumes:
+
+      #
+      # User configuration
+      #
+
+      - ../configs/crowdsec/acquis.yaml:/etc/crowdsec/acquis.yaml:ro
+      - ../configs/crowdsec/profiles.yaml:/etc/crowdsec/profiles.yaml:ro
+
+      #
+      # Runtime
+      #
+
+      - ${DATA_DIR}/crowdsec/db:/var/lib/crowdsec/db
+      - ${DATA_DIR}/crowdsec/data:/var/lib/crowdsec/data
+
+      #
+      # Logs
+      #
+
+      - ${DATA_DIR}/traefik/logs:/logs:ro
+
+      #
+      # Docker
+      #
+
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+
+    healthcheck:
+
+      test: ["CMD", "cscli", "version"]
+
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+    security_opt:
+
+      - no-new-privileges:true
+
+    labels:
+
+      - "com.centurylinklabs.watchtower.enable=true"

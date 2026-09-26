@@ -1,0 +1,7 @@
+filenames:
+
+  - /logs/access.log
+
+labels:
+
+  type: traefik

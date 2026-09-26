@@ -1,0 +1,163 @@
+###############################################################################
+#
+# Monitoring-Grafana Project
+#
+# File:
+#   compose/10-traefik.yml
+#
+# Description:
+#   Traefik v3 Reverse Proxy
+#
+###############################################################################
+
+services:
+
+  traefik:
+
+    ###########################################################################
+    # Image
+    ###########################################################################
+
+    image: traefik:${TRAEFIK_VERSION}
+
+    container_name: traefik
+
+    hostname: traefik
+
+    restart: unless-stopped
+
+    init: true
+
+    ###########################################################################
+    # Security
+    ###########################################################################
+
+    security_opt:
+
+      - no-new-privileges:true
+
+    ###########################################################################
+    # Configuration
+    ###########################################################################
+
+    command:
+
+      - --configFile=/etc/traefik/traefik.yml
+
+      # Let's Encrypt / ACME (HTTP challenge)
+
+      - --certificatesresolvers.letsencrypt.acme.email=${TRAEFIK_ACME_EMAIL}
+
+      - --certificatesresolvers.letsencrypt.acme.storage=/etc/traefik/acme/acme.json
+
+      - --certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=web
+
+    ###########################################################################
+    # Networks
+    ###########################################################################
+
+    networks:
+
+      bridge-moje:
+
+        ipv4_address: ${IP_TRAEFIK}
+
+      traefik-moje:
+
+        ipv4_address: ${IP_TRAEFIK_PUBLIC}
+
+    ###########################################################################
+    # Published Ports
+    ###########################################################################
+
+    ports:
+
+      #
+      # Internet
+      #
+
+      - "80:80"
+
+      - "443:443"
+
+      #
+      # Administration (WireGuard only)
+      #
+      - "8443:8443"
+      #- "8080:8080"
+
+    ###########################################################################
+    # Volumes
+    ###########################################################################
+
+    volumes:
+
+      #
+      # Docker socket
+      #
+
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+
+      #
+      # Static configuration
+      #
+
+      - ../configs/traefik/traefik.yml:/etc/traefik/traefik.yml:ro
+
+      #
+      # Dynamic configuration
+      #
+
+      - ../configs/traefik/dynamic:/etc/traefik/dynamic:ro
+
+      #
+      # Dashboard BasicAuth users
+      #
+
+      - ${DATA_DIR}/traefik/users:/etc/traefik/users:ro
+
+      #
+      # Persistent data
+      #
+
+      - ${DATA_DIR}/traefik/acme:/etc/traefik/acme
+
+      - ${DATA_DIR}/traefik/logs:/var/log/traefik
+
+      - ${DATA_DIR}/traefik/crowdsec:/etc/traefik/crowdsec:ro
+
+    ###########################################################################
+    # Healthcheck
+    ###########################################################################
+
+    healthcheck:
+
+      test:
+
+        - CMD
+
+        - traefik
+
+        - healthcheck
+
+        - --ping
+
+      interval: 30s
+
+      timeout: 5s
+
+      retries: 3
+
+    ###########################################################################
+    # Logging
+    ###########################################################################
+
+    logging:
+
+      driver: json-file
+
+      options:
+
+        max-size: ${LOG_MAX_SIZE}
+
+        max-file: "${LOG_MAX_FILES}"

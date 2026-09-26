@@ -1,0 +1,35 @@
+###############################################################################
+#
+# Monitoring-Grafana Project
+#
+# File:
+#   configs/traefik/dynamic/internal-services.yml
+#
+# Description:
+#   Internal Traefik services and routers.
+#
+###############################################################################
+
+http:
+
+  routers:
+
+    traefik-dashboard:
+
+      entryPoints:
+        - admin
+
+      rule: >
+        PathPrefix(`/api`) ||
+        PathPrefix(`/dashboard`) ||
+        PathPrefix(`/dashboard/`)
+
+      service: api@internal
+
+      middlewares:
+        - default-chain
+
+      tls:
+        options: default
+
+      priority: 100
