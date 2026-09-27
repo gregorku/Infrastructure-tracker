@@ -4,7 +4,7 @@
 # GPS Tracker
 ###############################################################################
 
-init_gps_tracker()
+init_gpstracker()
 {
     log_info "Preparing GPS Tracker image..."
 
