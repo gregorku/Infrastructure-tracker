@@ -68,6 +68,7 @@ source "${SCRIPT_DIR}/lib/tests/traefik.sh"
 source "${SCRIPT_DIR}/lib/tests/crowdsec.sh"
 source "${SCRIPT_DIR}/lib/tests/metabase.sh"
 source "${SCRIPT_DIR}/lib/tests/post-deploy.sh"
+source "${SCRIPT_DIR}/lib/tests/gpstracker.sh"
 source "${SCRIPT_DIR}/lib/tests/watchtower.sh"
 source "${SCRIPT_DIR}/lib/tests/summary.sh"
 

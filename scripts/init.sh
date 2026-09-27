@@ -60,6 +60,7 @@ source "${SCRIPT_DIR}/lib/init/traefik.sh"
 source "${SCRIPT_DIR}/lib/init/crowdsec.sh"
 source "${SCRIPT_DIR}/lib/init/metabase.sh"
 source "${SCRIPT_DIR}/lib/init/watchtower.sh"
+source "${SCRIPT_DIR}/lib/init/gpstracker.sh"
 source "${SCRIPT_DIR}/lib/init/summary.sh"
 
 ###############################################################################
@@ -107,6 +108,11 @@ init_metabase
 # Prepare Watchtower layout.
 #
 init_watchtower
+
+#
+# Build GPS Tracker image.
+#
+init_gpstracker
 
 #
 # Print summary.
