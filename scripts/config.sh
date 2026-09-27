@@ -24,7 +24,7 @@ readonly PROJECT_NAME="GPS-tracker"
 #
 # Docker Compose stack name
 #
-readonly STACK_NAME="grafana"
+readonly STACK_NAME="tracker"
 
 ###############################################################################
 # Repository
@@ -38,7 +38,7 @@ readonly GIT_DIR="/incus-dir/git/${PROJECT_NAME}"
 
 readonly BASE_DIR="/docker-data"
 
-readonly DATA_DIR="${BASE_DIR}/grafana"
+readonly DATA_DIR="${BASE_DIR}/tracker"
 
 ###############################################################################
 # Dockge
