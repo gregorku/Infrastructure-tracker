@@ -2,13 +2,13 @@
 
 ###############################################################################
 #
-# Monitoring-Grafana Project
+# GPS-tracker Project
 #
 # File:
 #   scripts/lib/checks/docker.sh
 #
 # Description:
-#   Docker validation and helper functions used by Monitoring-Grafana scripts.
+#   Docker validation and helper functions used by GPS-tracker scripts.
 #
 ###############################################################################
 

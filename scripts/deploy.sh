@@ -2,18 +2,18 @@
 
 ###############################################################################
 #
-# Monitoring-Grafana Project
+# GPS-tracker Project
 #
 # File:
 #   scripts/deploy.sh
 #
 # Description:
-#   Deploy Monitoring-Grafana services.
+#   Deploy GPS-tracker services.
 #
 # Responsibilities:
 #   - Verify deployment environment
 #   - Deploy Dockge
-#   - Deploy Monitoring-Grafana Docker Compose stack
+#   - Deploy GPS-tracker Docker Compose stack
 #   - Print deployment summary
 #
 ###############################################################################
@@ -74,7 +74,7 @@ source "${SCRIPT_DIR}/lib/deploy/restart.sh"
 # Main
 ###############################################################################
 
-print_header "Monitoring-Grafana deployment"
+print_header "GPS-tracker deployment"
 
 #
 # Verify environment.
@@ -112,7 +112,7 @@ deploy_dockge
 deploy_validate_compose
 
 #
-# Deploy Monitoring-Grafana stack.
+# Deploy GPS-tracker stack.
 #
 deploy_compose
 

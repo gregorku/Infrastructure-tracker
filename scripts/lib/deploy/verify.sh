@@ -2,13 +2,13 @@
 
 ###############################################################################
 #
-# Monitoring-Grafana Project
+# GPS-tracker Project
 #
 # File:
 #   scripts/lib/deploy/verify.sh
 #
 # Description:
-#   Verify Monitoring-Grafana project before deployment.
+#   Verify GPS-tracker project before deployment.
 #
 ###############################################################################
 

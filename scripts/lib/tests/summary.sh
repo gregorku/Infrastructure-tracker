@@ -2,13 +2,13 @@
 
 ###############################################################################
 #
-# Monitoring-Grafana Project
+# GPS-tracker Project
 #
 # File:
 #   scripts/lib/tests/summary.sh
 #
 # Description:
-#   Print Monitoring-Grafana test summary.
+#   Print GPS-tracker test summary.
 #
 ###############################################################################
 
@@ -20,7 +20,7 @@ test_summary()
 {
     print_section "Finished"
 
-    ok "Monitoring-Grafana tests completed."
+    ok "GPS-tracker tests completed."
 
     echo
 

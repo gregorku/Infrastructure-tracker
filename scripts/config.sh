@@ -2,13 +2,13 @@
 
 ###############################################################################
 #
-# Monitoring-Grafana Project
+# GPS-tracker Project
 #
 # File:
 #   scripts/config.sh
 #
 # Description:
-#   Common configuration shared by all Monitoring-Grafana scripts.
+#   Common configuration shared by all GPS-tracker scripts.
 #
 ###############################################################################
 
@@ -19,7 +19,7 @@ IFS=$'\n\t'
 # Project
 ###############################################################################
 
-readonly PROJECT_NAME="Monitoring-Grafana"
+readonly PROJECT_NAME="GPS-tracker"
 
 #
 # Docker Compose stack name
@@ -90,7 +90,7 @@ readonly POSTGRES_METABASE_SERVICE="postgres-metabase"
 readonly GPS_TRACKER_SERVICE="gps-tracker"
 
 ###############################################################################
-# Monitoring-Grafana data
+# GPS-tracker data
 ###############################################################################
 
 readonly TRAEFIK_DIR="${DATA_DIR}/traefik"

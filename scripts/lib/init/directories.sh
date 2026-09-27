@@ -2,13 +2,13 @@
 
 ###############################################################################
 #
-# Monitoring-Grafana Project
+# GPS-tracker Project
 #
 # File:
 #   scripts/lib/init/directories.sh
 #
 # Description:
-#   Prepare common Monitoring-Grafana directories.
+#   Prepare common GPS-tracker directories.
 #
 # Responsibilities:
 #   - Create shared data directory

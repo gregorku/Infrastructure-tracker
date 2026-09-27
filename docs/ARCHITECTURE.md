@@ -1,7 +1,7 @@
                 Internet
                     │
                     ▼
-              Monitoring-Grafana
+              GPS-tracker
            ┌─────────────────┐
            │ Traefik          │
            │ CrowdSec         │

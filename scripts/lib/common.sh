@@ -2,13 +2,13 @@
 
 ###############################################################################
 #
-# Monitoring-Grafana Project
+# GPS-tracker Project
 #
 # File:
 #   scripts/lib/common.sh
 #
 # Description:
-#   Common helper functions used by all Monitoring-Grafana scripts.
+#   Common helper functions used by all GPS-tracker scripts.
 #
 ###############################################################################
 
@@ -97,7 +97,7 @@ require_file_or_directory() {
 ###############################################################################
 # Environment
 #
-# Generic environment required by all Monitoring-Grafana scripts.
+# Generic environment required by all GPS-tracker scripts.
 ###############################################################################
 
 check_environment() {

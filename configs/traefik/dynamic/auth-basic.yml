@@ -1,6 +1,6 @@
 ###############################################################################
 #
-# Monitoring-Grafana Project
+# GPS-tracker Project
 #
 # File:
 #   configs/traefik/dynamic/auth-basic.yml
@@ -18,6 +18,6 @@ http:
 
       basicAuth:
 
-        realm: "Monitoring-Grafana"
+        realm: "GPS-tracker"
 
         usersFile: "/etc/traefik/users/dashboard.htpasswd"

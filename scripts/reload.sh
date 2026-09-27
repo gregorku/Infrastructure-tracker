@@ -2,13 +2,13 @@
 
 ###############################################################################
 #
-# Monitoring-Grafana Project
+# GPS-tracker Project
 #
 # File:
 #   scripts/reload.sh
 #
 # Description:
-#   Reload Monitoring-Grafana containers.
+#   Reload GPS-tracker containers.
 #
 ###############################################################################
 
@@ -41,7 +41,7 @@ source "${SCRIPT_DIR}/lib/docker-compose.sh"
 show_help()
 {
 cat <<EOF
-Monitoring-Grafana Project
+GPS-tracker Project
 
 Usage:
 
@@ -57,7 +57,7 @@ Options:
 
 Description:
 
-    Reload the Monitoring-Grafana Docker stack.
+    Reload the GPS-tracker Docker stack.
 
 EOF
 }
@@ -83,7 +83,7 @@ case "${1:-}" in
         ;;
 esac
 
-print_header "Monitoring-Grafana reload"
+print_header "GPS-tracker reload"
 
 ###############################################################################
 # Deploy

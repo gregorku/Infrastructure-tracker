@@ -3,7 +3,7 @@
 # File: scripts/lib/init/stack.sh
 #
 # Description:
-#   Initial preparation of the Monitoring-Grafana deployment stack.
+#   Initial preparation of the GPS-tracker deployment stack.
 #
 # Responsibilities:
 #   - create STACK_DIR
@@ -15,7 +15,7 @@
 
 init_stack() {
     print_section "Project stack"
-    log_info "Preparing Monitoring-Grafana stack..."
+    log_info "Preparing GPS-tracker stack..."
 
     mkdir -p "${STACK_DIR}"
 
@@ -34,5 +34,5 @@ init_stack() {
         log_info "Copied ${item}"
     done
 
-    log_success "Monitoring-Grafana stack prepared."
+    log_success "GPS-tracker stack prepared."
 }

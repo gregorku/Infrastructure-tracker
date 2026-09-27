@@ -2,13 +2,13 @@
 
 ###############################################################################
 #
-# Monitoring-Grafana Project
+# GPS-tracker Project
 #
 # File:
 #   scripts/test.sh
 #
 # Description:
-#   Run Monitoring-Grafana framework tests.
+#   Run GPS-tracker framework tests.
 #
 ###############################################################################
 
@@ -75,7 +75,7 @@ source "${SCRIPT_DIR}/lib/tests/summary.sh"
 # Main
 ###############################################################################
 
-print_header "Monitoring-Grafana test"
+print_header "GPS-tracker test"
 
 check_environment
 check_docker_environment

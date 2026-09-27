@@ -2,7 +2,7 @@
 
 ###############################################################################
 #
-# Monitoring-Grafana Project
+# GPS-tracker Project
 #
 # File:
 #   scripts/post-deploy.sh
@@ -60,7 +60,7 @@ source "${SCRIPT_DIR}/lib/post-deploy/summary.sh"
 # Main
 ###############################################################################
 
-print_header "Monitoring-Grafana post deployment"
+print_header "GPS-tracker post deployment"
 
 #
 # Verify environment.

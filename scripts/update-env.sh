@@ -2,7 +2,7 @@
 
 ###############################################################################
 #
-# Monitoring-Grafana
+# GPS-tracker
 #
 # File:
 #   scripts/update-env.sh

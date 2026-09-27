@@ -2,13 +2,13 @@
 
 ###############################################################################
 #
-# Monitoring-Grafana Project
+# GPS-tracker Project
 #
 # File:
 #   scripts/init.sh
 #
 # Description:
-#   Initialize Monitoring-Grafana project.
+#   Initialize GPS-tracker project.
 #
 # Responsibilities:
 #   - Verify environment
@@ -66,7 +66,7 @@ source "${SCRIPT_DIR}/lib/init/summary.sh"
 # Main
 ###############################################################################
 
-print_header "Monitoring-Grafana initialization"
+print_header "GPS-tracker initialization"
 
 #
 # Verify environment.

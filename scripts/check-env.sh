@@ -2,13 +2,13 @@
 
 ###############################################################################
 #
-# Monitoring-Grafana Project
+# GPS-tracker Project
 #
 # File:
 #   scripts/check-env.sh
 #
 # Description:
-#   Validate Monitoring-Grafana environment configuration.
+#   Validate GPS-tracker environment configuration.
 #
 ###############################################################################
 
@@ -43,7 +43,7 @@ source "${SCRIPT_DIR}/lib/env/load.sh"
 # Main
 ###############################################################################
 
-print_header "Monitoring-Grafana Environment Check"
+print_header "GPS-tracker Environment Check"
 
 check_environment
 

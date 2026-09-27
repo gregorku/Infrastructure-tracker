@@ -2,13 +2,13 @@
 
 ###############################################################################
 #
-# Monitoring-Grafana Project
+# GPS-tracker Project
 #
 # File:
 #   scripts/lib/logging.sh
 #
 # Description:
-#   Common logging functions used by all Monitoring-Grafana scripts.
+#   Common logging functions used by all GPS-tracker scripts.
 #
 ###############################################################################
 # Internal logging functions

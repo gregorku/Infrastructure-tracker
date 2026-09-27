@@ -2,13 +2,13 @@
 
 ###############################################################################
 #
-# Monitoring-Grafana Project
+# GPS-tracker Project
 #
 # File:
 #   scripts/lib/deploy/sync.sh
 #
 # Description:
-#   Synchronize the Monitoring-Grafana repository to the Docker stack directory.
+#   Synchronize the GPS-tracker repository to the Docker stack directory.
 #
 ###############################################################################
 
