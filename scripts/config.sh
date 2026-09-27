@@ -19,7 +19,7 @@ IFS=$'\n\t'
 # Project
 ###############################################################################
 
-readonly PROJECT_NAME="GPS-tracker"
+readonly PROJECT_NAME="Infrastructure-tracker"
 
 #
 # Docker Compose stack name
