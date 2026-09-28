@@ -90,6 +90,39 @@ env_load()
 }
 
 ###############################################################################
+# Get a single variable from an arbitrary environment file
+#
+# Description:
+#   Reads one KEY=VALUE pair without sourcing the file, so it is safe
+#   to call even under `set -u` and even before the file has been
+#   loaded (or before it exists as a full shell environment).
+#
+# Arguments:
+#   $1 - Environment file
+#   $2 - Variable name
+#
+# Returns:
+#   Variable value, or an empty string if not found
+#
+###############################################################################
+
+env_get_from()
+{
+    local file="$1"
+    local key="$2"
+
+    [[ -f "${file}" ]] \
+        || fail "Environment file not found: ${file}"
+
+    awk -F= -v key="${key}" '
+        $1 == key {
+            print substr($0, index($0, "=") + 1)
+            exit
+        }
+    ' "${file}"
+}
+
+###############################################################################
 # Get environment variable
 #
 # Arguments:
@@ -104,13 +137,29 @@ env_get()
 {
     local key="$1"
 
-    [[ -f "${ENV_FILE}" ]] \
-        || fail ".env not found."
+    env_get_from "${ENV_FILE}" "${key}"
+}
 
-    awk -F= -v key="${key}" '
-        $1 == key {
-            print substr($0, index($0, "=") + 1)
-            exit
-        }
-    ' "${ENV_FILE}"
+###############################################################################
+# Get environment variable from .env.example
+#
+# Description:
+#   Used where a value is needed before .env has been created (e.g.
+#   during ./scripts/init.sh, which runs before ./scripts/update-env.sh).
+#   Only safe for "framework" policy variables, whose value in .env is
+#   always synchronized from .env.example anyway.
+#
+# Arguments:
+#   $1 - Variable name
+#
+# Returns:
+#   Variable value from .env.example
+#
+###############################################################################
+
+env_get_example()
+{
+    local key="$1"
+
+    env_get_from "${ENV_EXAMPLE_FILE}" "${key}"
 }

@@ -70,6 +70,15 @@ ok() {
     log_success "$@"
 }
 
+#
+# Alias used by the GPS Tracker modules.
+#
+
+log_ok() {
+
+    log_success "$@"
+}
+
 warn() {
 
     log_warn "$@"

@@ -79,8 +79,12 @@ ENV_POLICY[WATCHTOWER_VERSION]="framework"
 # GPS Tracker
 ###############################################################################
 
+ENV_POLICY[GPS_TRACKER_IMAGE]="framework"
+ENV_POLICY[GPS_TRACKER_VERSION]="framework"
+
 ENV_POLICY[GPS_DOMAIN]="user"
 ENV_POLICY[GPS_API_TOKEN]="user"
+ENV_POLICY[GPS_DEFAULT_DEVICE_NAME]="user"
 ENV_POLICY[GPS_ADMIN_USER]="user"
 ENV_POLICY[GPS_ADMIN_PASSWORD]="user"
 

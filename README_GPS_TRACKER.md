@@ -17,6 +17,7 @@ Add these values to the real `.env` (do not commit the real secrets):
 ```dotenv
 GPS_DOMAIN=mapa.serveftp.org
 GPS_API_TOKEN=<long-random-token>
+GPS_DEFAULT_DEVICE_NAME=Tracker 1
 GPS_ADMIN_USER=admin
 GPS_ADMIN_PASSWORD=<strong-password>
 IP_GPS_TRACKER=10.40.0.20
@@ -35,12 +36,21 @@ Traefik obtains the TLS certificate for `mapa.serveftp.org` through Let's Encryp
 
 ## Tracker API
 
-The ESP32 should later send a batch with:
+`GPS_API_TOKEN` registers exactly one tracker device automatically on first
+startup. The ESP32 should send a batch with:
 
 `POST https://mapa.serveftp.org/api/ingest`
 
 and header:
 
-`X-GPS-Token: <GPS_API_TOKEN>`
+`X-GPS-Token: <token of the device>`
 
 The body contains the GPS points already collected into the SD/LTE batch. The server does not require one HTTP request per GPS second.
+
+### Adding more trackers
+
+The service supports multiple trackers at once. Register additional devices
+from the web UI ("+ Přidat tracker") or via `POST /api/devices` (HTTP Basic
+auth with `GPS_ADMIN_USER`/`GPS_ADMIN_PASSWORD`); each call returns a new
+token, shown only once. Configure each tracker's firmware with its own
+token - see `gps-tracker/README.md` for the full API.

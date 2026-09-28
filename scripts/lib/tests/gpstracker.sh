@@ -8,7 +8,24 @@ test_gps_tracker()
 {
     log_info "Testing GPS Tracker..."
 
-    local image="${GPS_TRACKER_IMAGE}:${GPS_TRACKER_VERSION}"
+    #
+    # GPS_TRACKER_IMAGE/GPS_TRACKER_VERSION/GPS_DOMAIN/GPS_DATA_DIR live in
+    # .env, which is consumed by Docker Compose via --env-file and is never
+    # sourced into these scripts. Read the values we need with env_get()
+    # instead of dereferencing them as (unset) shell variables.
+    #
+
+    local gps_tracker_image
+    local gps_tracker_version
+    local gps_domain
+    local gps_data_dir
+
+    gps_tracker_image="$(env_get "GPS_TRACKER_IMAGE")"
+    gps_tracker_version="$(env_get "GPS_TRACKER_VERSION")"
+    gps_domain="$(env_get "GPS_DOMAIN")"
+    gps_data_dir="$(env_get "GPS_DATA_DIR")"
+
+    local image="${gps_tracker_image}:${gps_tracker_version}"
     local container="gps-tracker"
 
     # -------------------------------------------------------------------------
@@ -110,8 +127,8 @@ test_gps_tracker()
     # GPS domain
     # -------------------------------------------------------------------------
 
-    if [[ -n "${GPS_DOMAIN:-}" ]]; then
-        log_ok "GPS Tracker domain configured: ${GPS_DOMAIN}"
+    if [[ -n "${gps_domain}" ]]; then
+        log_ok "GPS Tracker domain configured: ${gps_domain}"
     else
         log_error "GPS_DOMAIN is not configured."
         return 1
@@ -121,8 +138,8 @@ test_gps_tracker()
     # GPS data directory
     # -------------------------------------------------------------------------
 
-    if [[ -n "${GPS_DATA_DIR:-}" ]]; then
-        log_ok "GPS Tracker data directory configured: ${GPS_DATA_DIR}"
+    if [[ -n "${gps_data_dir}" ]]; then
+        log_ok "GPS Tracker data directory configured: ${gps_data_dir}"
     else
         log_error "GPS_DATA_DIR is not configured."
         return 1

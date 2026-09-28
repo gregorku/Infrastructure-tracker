@@ -5,15 +5,43 @@
 <title>GPS Tracker</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <style>
-html,body{height:100%;margin:0;font-family:system-ui,sans-serif}#app{display:flex;height:100%}#side{width:330px;overflow:auto;padding:16px;box-sizing:border-box}#map{flex:1}.route{padding:10px;border-bottom:1px solid #ddd;cursor:pointer}.route:hover{background:#f4f4f4}.actions button{margin:3px 3px 0 0}.muted{color:#777;font-size:.9em}
-</style></head><body><div id="app"><aside id="side"><h2>GPS Tracker</h2><p class="muted">Trasy uložené trackerem.</p><div id="routes">Načítám…</div></aside><main id="map"></main></div>
+html,body{height:100%;margin:0;font-family:system-ui,sans-serif}#app{display:flex;height:100%}#side{width:330px;overflow:auto;padding:16px;box-sizing:border-box}#map{flex:1}.route{padding:10px;border-bottom:1px solid #ddd;cursor:pointer}.route:hover{background:#f4f4f4}.actions button{margin:3px 3px 0 0}.muted{color:#777;font-size:.9em}.device-tag{display:inline-block;background:#eef2ff;color:#3947a3;border-radius:4px;padding:1px 6px;font-size:.8em;margin-bottom:2px}select#deviceFilter{width:100%;padding:6px;margin:8px 0;box-sizing:border-box}#addTracker{width:100%;margin-top:8px}
+</style></head><body><div id="app"><aside id="side"><h2>GPS Tracker</h2><p class="muted">Trasy uložené trackery.</p><select id="deviceFilter" onchange="load()"><option value="">Všechny trackery</option></select><div id="routes">Načítám…</div><button id="addTracker" onclick="addTracker()">+ Přidat tracker</button></aside><main id="map"></main></div>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 const map=L.map('map').setView([50.5,13.44],12); L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap'}).addTo(map); let line;
-async function load(){const rs=await fetch('/api/routes').then(r=>r.json()); document.querySelector('#routes').innerHTML=rs.length?rs.map(r=>`<div class="route"><b>${esc(r.name)}</b><br><span class="muted">${r.started_at||''} · ${r.points} bodů</span><div class="actions"><button onclick="show(${r.id})">Zobrazit</button><button onclick="renameRoute(${r.id})">Přejmenovat</button><button onclick="deleteRoute(${r.id})">Smazat</button></div></div>`).join(''):'Žádné trasy';}
+
+function renderDeviceOptions(rs){
+  const sel=document.querySelector('#deviceFilter');
+  const current=sel.value;
+  const seen=new Map();
+  rs.forEach(r=>{ if(r.device_id!=null) seen.set(r.device_id, r.device_name || ('Tracker #'+r.device_id)); });
+  sel.innerHTML='<option value="">Všechny trackery</option>'+[...seen.entries()].map(([id,name])=>`<option value="${id}">${esc(name)}</option>`).join('');
+  sel.value=current && seen.has(Number(current)) ? current : '';
+}
+
+async function load(){
+  const filter=document.querySelector('#deviceFilter').value;
+  const rsAll=await fetch('/api/routes').then(r=>r.json());
+  renderDeviceOptions(rsAll);
+  const rs=filter?rsAll.filter(r=>String(r.device_id)===filter):rsAll;
+  document.querySelector('#routes').innerHTML=rs.length?rs.map(r=>`<div class="route"><span class="device-tag">${esc(r.device_name||'bez trackeru')}</span><br><b>${esc(r.name)}</b><br><span class="muted">${r.started_at||''} · ${r.points} bodů</span><div class="actions"><button onclick="show(${r.id})">Zobrazit</button><button onclick="renameRoute(${r.id})">Přejmenovat</button><button onclick="deleteRoute(${r.id})">Smazat</button></div></div>`).join(''):'Žádné trasy';
+}
+
 async function show(id){const d=await fetch('/api/routes/'+id).then(r=>r.json()); if(line)map.removeLayer(line); line=L.polyline(d.points.map(p=>[p.latitude,p.longitude])); line.addTo(map); if(d.points.length)map.fitBounds(line.getBounds(),{padding:[20,20]});}
 function auth(){return 'Basic '+btoa(prompt('Uživatel')+':'+prompt('Heslo'));}
 async function renameRoute(id){const name=prompt('Nový název trasy'); if(!name)return; const r=await fetch('/api/routes/'+id,{method:'PATCH',headers:{'Content-Type':'application/json','Authorization':auth()},body:JSON.stringify({name})}); if(r.ok)load(); else alert(await r.text());}
 async function deleteRoute(id){if(!confirm('Opravdu smazat tuto trasu včetně všech bodů?'))return; const r=await fetch('/api/routes/'+id,{method:'DELETE',headers:{Authorization:auth()}}); if(r.ok){if(line){map.removeLayer(line);line=null}load()}else alert(await r.text());}
+
+async function addTracker(){
+  const name=prompt('Název nového trackeru (např. "Motorka", "Auto")');
+  if(!name)return;
+  const r=await fetch('/api/devices',{method:'POST',headers:{'Content-Type':'application/json','Authorization':auth()},body:JSON.stringify({name})});
+  if(!r.ok){alert(await r.text());return;}
+  const d=await r.json();
+  alert('Tracker "'+d.name+'" vytvořen.\n\nToken (zapište si ho, zobrazí se jen jednou):\n\n'+d.token+'\n\nPoužijte ho v ESP32 jako hlavičku X-GPS-Token.');
+  load();
+}
+
 function esc(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));} load();
 </script></body></html>

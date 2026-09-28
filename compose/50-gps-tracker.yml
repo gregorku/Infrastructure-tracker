@@ -13,6 +13,11 @@ services:
 
     image: ${GPS_TRACKER_IMAGE}:${GPS_TRACKER_VERSION}
 
+    # Always build locally; never try to pull this image from a registry
+    # (it does not exist on one). Without this, `docker compose pull`
+    # (used by deploy.sh) fails on this service.
+    pull_policy: build
+
     container_name: gps-tracker
 
     hostname: gps-tracker
@@ -28,6 +33,8 @@ services:
       TZ: ${TZ}
 
       GPS_API_TOKEN: ${GPS_API_TOKEN}
+
+      GPS_DEFAULT_DEVICE_NAME: ${GPS_DEFAULT_DEVICE_NAME}
 
       GPS_ADMIN_USER: ${GPS_ADMIN_USER}
 
