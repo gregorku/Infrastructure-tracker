@@ -28,6 +28,18 @@ init_gpstracker()
     [[ -n "${version}" ]] \
         || fail "GPS_TRACKER_VERSION is not defined in .env.example."
 
+    #
+    # The container runs as the non-root user "gps" (uid/gid 10001), so the
+    # bind-mounted data directory must be writable by it. Without this the
+    # SQLite database cannot be created and the container restarts forever.
+    #
+
+    mkdir -p "${GPS_TRACKER_DIR}"
+    chown -R 10001:10001 "${GPS_TRACKER_DIR}"
+    chmod 750 "${GPS_TRACKER_DIR}"
+
+    log_ok "Data directory ready: ${GPS_TRACKER_DIR} (uid 10001)"
+
     log_info "Preparing GPS Tracker image..."
 
     docker build \

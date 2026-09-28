@@ -68,6 +68,17 @@ entryPoints:
 
     address: ":80"
 
+    #
+    # HAProxy in front of this Incus container forwards traffic with
+    # "send-proxy-v2". Accept the PROXY protocol header only from the
+    # Incus network so the real client IP reaches CrowdSec and the logs.
+    #
+    proxyProtocol:
+
+      trustedIPs:
+
+        - "10.10.10.0/24"
+
   ###########################################################################
   # HTTPS
   ###########################################################################
@@ -75,6 +86,12 @@ entryPoints:
   websecure:
 
     address: ":443"
+
+    proxyProtocol:
+
+      trustedIPs:
+
+        - "10.10.10.0/24"
 
   ###########################################################################
   # Administration (WireGuard only)
