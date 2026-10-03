@@ -65,6 +65,14 @@ def init_db():
             battery_percent REAL
         );
         CREATE INDEX IF NOT EXISTS idx_points_route_time ON points(route_id, timestamp);
+        CREATE TABLE IF NOT EXISTS uploaded_files (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            device_id INTEGER NOT NULL REFERENCES devices(id) ON DELETE CASCADE,
+            file_id TEXT NOT NULL,
+            uploaded_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            UNIQUE(device_id, file_id)
+        );
+        CREATE INDEX IF NOT EXISTS idx_uploaded_files_device ON uploaded_files(device_id);
         """)
 
         # Migration: routes table may predate the device_id column
@@ -242,15 +250,33 @@ def route(route_id: int):
 
 @app.post("/api/ingest")
 async def ingest(request: Request, x_gps_token: str | None = Header(default=None)):
+    # Authenticate the tracker first.
     with db() as c:
         device = device_for_token(c, x_gps_token)
     if not device:
         raise HTTPException(401, "Invalid GPS token")
 
     payload: Any = await request.json()
-    points = payload.get("points") if isinstance(payload, dict) else payload
+    if not isinstance(payload, dict):
+        raise HTTPException(400, "JSON body must be an object")
+
+    points = payload.get("points")
     if not isinstance(points, list) or not points:
         raise HTTPException(400, "points must be a non-empty list")
+
+    # New uploader protocol: one complete CSV file per request.
+    # file_id makes the request idempotent: if the modem loses the HTTP
+    # response after the database commit, the tracker can safely resend
+    # the same CSV without creating duplicate points.
+    file_id = payload.get("file_id")
+    if file_id is not None:
+        if not isinstance(file_id, str):
+            raise HTTPException(400, "file_id must be a string")
+        file_id = file_id.strip()
+        if not file_id:
+            raise HTTPException(400, "file_id cannot be empty")
+        if len(file_id) > 128:
+            raise HTTPException(400, "file_id is too long")
 
     cleaned = []
     for p in points:
@@ -268,13 +294,31 @@ async def ingest(request: Request, x_gps_token: str | None = Header(default=None
     start = cleaned[0][0]
     end = cleaned[-1][0]
     date = start[:10] if len(start) >= 10 else dt.datetime.now(dt.timezone.utc).date().isoformat()
-    name = payload.get("name") if isinstance(payload, dict) else None
+    name = payload.get("name")
     if not name:
         name = f"{device['name']} - {date}"
 
     with db() as c:
+        # For the new file-based protocol, reserve file_id inside the SAME
+        # SQLite transaction as the points. If anything below fails, the
+        # transaction rolls back both the marker and all inserted points.
+        if file_id is not None:
+            inserted = c.execute(
+                "INSERT OR IGNORE INTO uploaded_files(device_id, file_id) VALUES(?, ?)",
+                (device["id"], file_id),
+            ).rowcount
+
+            if inserted == 0:
+                return {
+                    "ok": True,
+                    "device": device["name"],
+                    "status": "already_received",
+                    "file_id": file_id,
+                    "points": len(cleaned),
+                }
+
         # Continue the current route for the same device and calendar day;
-        # this keeps LTE batches from the same tracker together.
+        # this keeps all minute files from the same tracker together.
         r = c.execute(
             "SELECT id FROM routes WHERE device_id=? AND started_at LIKE ? ORDER BY id DESC LIMIT 1",
             (device["id"], date + "%"),
@@ -288,12 +332,21 @@ async def ingest(request: Request, x_gps_token: str | None = Header(default=None
                 (device["id"], name, start, end),
             )
             route_id = cur.lastrowid
+
         c.executemany("""
             INSERT INTO points(route_id,timestamp,latitude,longitude,altitude,speed,satellites,hdop,
                                battery_adc,battery_voltage,battery_percent)
             VALUES(?,?,?,?,?,?,?,?,?,?,?)
         """, [(route_id, *p) for p in cleaned])
-    return {"ok": True, "device": device["name"], "route_id": route_id, "points": len(cleaned)}
+
+    return {
+        "ok": True,
+        "device": device["name"],
+        "status": "accepted" if file_id is not None else "accepted_legacy",
+        "file_id": file_id,
+        "route_id": route_id,
+        "points": len(cleaned),
+    }
 
 
 class RenamePayload(BaseModel):
